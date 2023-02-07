@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(morgan(':person'))
-app.use(express.static('../front/build'))
+app.use(express.static('build'))
 
 let persons = [
     { 
