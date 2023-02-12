@@ -1,0 +1,6 @@
+DELETE http://localhost/api/persons/
+Content-Type: application/json
+
+{
+    "id": "63e821f8f1418da8ecbd21f0"
+}
