@@ -15,29 +15,6 @@ app.use(morgan('tiny'))
 app.use(morgan(':person'))
 app.use(express.static('build'))
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
 
 app.get('/', (request, response) => {
     response.send('<h1>Phonebook App</h1>')
@@ -49,14 +26,16 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
+/*
 app.get('/api/info', (request, response) => {
     response.send(`
         <p>Phonebook has info for ${persons.length} people</p>
         <p>${new Date()}</p>`
     )
 })
+*/
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id)
         .then(person => {
             if (person) {
@@ -70,16 +49,12 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-        .then(result => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => next(error))
 
 })
-
-const generatedId = () => {
-    return Math.floor(Math.random() * 999999999)
-}
 
 app.post('/api/persons', (request, response, next) => {
     const body = request.body
@@ -94,16 +69,15 @@ app.post('/api/persons', (request, response, next) => {
             error: 'number missing'
         })
     }
-
-    
+    /*
     if (persons.find(person => person.name === body.name)) {
         return response.status(400).json({
             error: 'name already exists in db, names must be unique'
         })
     }
-    
+    */
     const person = new Person ({
-        name: body.name, 
+        name: body.name,
         number: body.number
     })
 
@@ -113,7 +87,7 @@ app.post('/api/persons', (request, response, next) => {
         })
         .catch(error => next(error))
 
-   /* 
+    /*
     Person.find({ name: body.name })
         .then(person => {
             console.log(person)
@@ -122,25 +96,25 @@ app.post('/api/persons', (request, response, next) => {
             } else {
 
                 const person = new Person ({
-                    name: body.name, 
-                    number: body.number, 
+                    name: body.name,
+                    number: body.number,
                 })
 
                 person.save()
                     .then(savedPerson => {
                         response.json(savedPerson)
                     })
-                    .catch(error => next(error)) 
+                    .catch(error => next(error))
             }
         })
         */
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-        const body = request.body
+    const body = request.body
 
     const person = {
-        name: body.name, 
+        name: body.name,
         number: body.number,
     }
 
@@ -164,7 +138,7 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({ error: 'malformed id' })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })
-    }   
+    }
 
     next(error)
 }

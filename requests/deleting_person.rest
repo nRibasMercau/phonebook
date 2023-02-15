@@ -1,6 +1,3 @@
-DELETE http://localhost/api/persons/
+DELETE http://localhost:3001/api/persons/63e821f8f1418da8ecbd21f0
 Content-Type: application/json
 
-{
-    "id": "63e821f8f1418da8ecbd21f0"
-}
